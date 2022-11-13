@@ -25,7 +25,7 @@ struct CityListView: View {
             GeometryReader { proxy in
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 10) {
-                        ForEach(0..<weatherViewModel.weather.count, id: \.self) { idx in
+                        ForEach(0..<(weatherViewModel.weather?.count ?? 0), id: \.self) { idx in
                             WeatherTile(weatherViewModel: weatherViewModel, showDashboard: $showDashboard, index: $index, idx: idx)
                                 .frame(width: proxy.size.width * 0.4, height: proxy.size.width * 0.4)
                                 .cornerRadius(25)
@@ -52,7 +52,7 @@ struct WeatherTile: View {
     var body: some View {
         ZStack {
             Color.purple.opacity(0.4)
-            TileInfo(weatherRespose: weatherViewModel.weather[idx])
+            TileInfo(weatherRespose: weatherViewModel.weather?[idx])
         }
         .onTapGesture {
             withAnimation {
@@ -64,18 +64,18 @@ struct WeatherTile: View {
 }
 
 struct TileInfo: View {
-    var weatherRespose: WeatherResponse
+    var weatherRespose: WeatherResponse? = nil
     var country: String {
         let current = Locale(identifier: "en_US")
-        return current.localizedString(forRegionCode: weatherRespose.sys.country)  ?? "..."
+        return current.localizedString(forRegionCode: weatherRespose?.sys.country ?? "...")  ?? "..."
     }
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
                 VStack(alignment: .leading) {
-                    Text("\(weatherRespose.main.temp, specifier: "%.0f")°")
+                    Text("\(weatherRespose?.main.temp ?? 0.0, specifier: "%.0f")°")
                     Spacer()
-                    Text(weatherRespose.name)
+                    Text(weatherRespose?.name ?? "...")
                 }
                 Spacer()
                 VStack {

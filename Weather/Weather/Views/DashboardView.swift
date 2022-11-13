@@ -36,37 +36,25 @@ struct InfoView: View {
                 HStack {
                     Spacer()
                     VStack(alignment: .leading) {
-                        Text(weatherViewModel.weather[index].name ?? "...")
+                        Text(weatherViewModel.weather?[index].name ?? "Please choose a city")
                             .font(.system(size: 24))
-                            .gesture(
-                                DragGesture(minimumDistance: 0, coordinateSpace: .local)
-                                    .onEnded({ value in
-                                        if value.translation.width < 0 {
-                                            print("Swiped left")
-                                        }
-                                        
-                                        if value.translation.width > 0 {
-                                            print("Swiped right")
-                                        }
-                                    })
-                            )
                         
-                        Text("\(weatherViewModel.weather.first?.main.temp ?? 0.0, specifier: "%.0f")°")
+                        Text("\(weatherViewModel.weather?[index].main.temp ?? 0.0, specifier: "%.0f")°")
                             .font(.system(size: 72))
                         
                         Spacer()
                         
                         HStack {
-                            Label("\(weatherViewModel.weather.first?.main.tempMax ?? 0.0, specifier: "%.0f")°",
+                            Label("\(weatherViewModel.weather?[index].main.tempMax ?? 0.0, specifier: "%.0f")°",
                                   systemImage: "chevron.up")
-                            Label("\(weatherViewModel.weather.first?.main.tempMin ?? 0.0, specifier: "%.0f")°",
+                            Label("\(weatherViewModel.weather?[index].main.tempMin ?? 0.0, specifier: "%.0f")°",
                                   systemImage: "chevron.down")
                         }
                         
                         Spacer()
                         
-                        Text(weatherViewModel.weather.first?.weather[0].main ?? "...")
-                        Text("Feels like \(weatherViewModel.weather.first?.main.feelsLike ?? 0.0, specifier: "%.0f")°")
+                        Text(weatherViewModel.weather?[index].weather[0].main ?? "...")
+                        Text("Feels like \(weatherViewModel.weather?[index].main.feelsLike ?? 0.0, specifier: "%.0f")°")
                     }
                     .frame(height: proxy.size.width * 0.5)
                     .padding(10)
