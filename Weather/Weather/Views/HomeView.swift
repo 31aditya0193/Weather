@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var searchText: String = ""
-    @State private var showDashboard = true
+    @State private var showDashboard = false
     @State private var isCelcius = true
     @State private var title: Text = Text(Date.now, format: .dateTime.weekday().day().month())
     var body: some View {
@@ -26,8 +25,6 @@ struct HomeView: View {
                     }
                 }
         }
-//        .accentColor(.white)
-        .searchable(text: $searchText, prompt: "Check Weather for City")
     }
 }
 
