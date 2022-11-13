@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct CityListView: View {
+    @ObservedObject var weatherViewModel: WeatherViewModel
     @State private var searchText: String = ""
+
     let columns = [
             GridItem(),
             GridItem()
@@ -17,8 +19,8 @@ struct CityListView: View {
         GeometryReader { proxy in
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 10) {
-                    ForEach(0...10, id: \.self) { idx in
-                        WeatherTile(i: "\(idx)")
+                    ForEach(0..<weatherViewModel.weather.count, id: \.self) { idx in
+                        WeatherTile(weatherViewModel: weatherViewModel, idx: idx)
                             .frame(width: proxy.size.width * 0.4, height: proxy.size.width * 0.4)
                             .cornerRadius(25)
                     }
@@ -31,29 +33,37 @@ struct CityListView: View {
 }
 
 struct WeatherTile: View {
-    var i: String
+    @ObservedObject var weatherViewModel: WeatherViewModel
+    var idx: Int
     var body: some View {
         ZStack {
             Color.purple.opacity(0.4)
-            TileInfo()
+            TileInfo(weatherRespose: weatherViewModel.weather[idx])
         }
     }
 }
 
 struct TileInfo: View {
+    var weatherRespose: WeatherResponse
+    var country: String {
+        let current = Locale(identifier: "en_US")
+        return current.localizedString(forRegionCode: weatherRespose.sys.country)  ?? "..."
+    }
     var body: some View {
-        HStack {
-            VStack {
-                Text("28°C")
+        VStack(alignment: .leading) {
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("\(weatherRespose.main.temp, specifier: "%.0f")°")
+                    Spacer()
+                    Text(weatherRespose.name)
+                }
                 Spacer()
-                Text("28°C")
-                Text("28°C")
+                VStack {
+                    Image(systemName: "sun.max")
+                    Spacer()
+                }
             }
-            Spacer()
-            VStack {
-                Image(systemName: "sun.max")
-                Spacer()
-            }
+            Text(country)
         }
         .padding(15)
     }

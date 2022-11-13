@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DashboardView: View {
-    @ObservedObject var weatherViewModel: WeatherViewModel = WeatherViewModel()
+    @ObservedObject var weatherViewModel: WeatherViewModel
 
     var body: some View {
         ZStack {
@@ -37,7 +37,7 @@ struct InfoView: View {
                 HStack {
                     Spacer()
                     VStack(alignment: .leading) {
-                        Text(weatherViewModel.weather?.name ?? "...")
+                        Text(weatherViewModel.weather.first?.name ?? "...")
                             .font(.system(size: 24))
                             .gesture(
                                 DragGesture(minimumDistance: 0, coordinateSpace: .local)
@@ -52,22 +52,22 @@ struct InfoView: View {
                                     })
                             )
                         
-                        Text("\(weatherViewModel.weather?.main.temp ?? 0.0, specifier: "%.0f")°")
+                        Text("\(weatherViewModel.weather.first?.main.temp ?? 0.0, specifier: "%.0f")°")
                             .font(.system(size: 72))
                         
                         Spacer()
                         
                         HStack {
-                            Label("\(weatherViewModel.weather?.main.tempMax ?? 0.0, specifier: "%.0f")°",
+                            Label("\(weatherViewModel.weather.first?.main.tempMax ?? 0.0, specifier: "%.0f")°",
                                   systemImage: "chevron.up")
-                            Label("\(weatherViewModel.weather?.main.tempMin ?? 0.0, specifier: "%.0f")°",
+                            Label("\(weatherViewModel.weather.first?.main.tempMin ?? 0.0, specifier: "%.0f")°",
                                   systemImage: "chevron.down")
                         }
                         
                         Spacer()
                         
-                        Text(weatherViewModel.weather?.weather[0].main ?? "...")
-                        Text("Feels like \(weatherViewModel.weather?.main.feelsLike ?? 0.0, specifier: "%.0f")°")
+                        Text(weatherViewModel.weather.first?.weather[0].main ?? "...")
+                        Text("Feels like \(weatherViewModel.weather.first?.main.feelsLike ?? 0.0, specifier: "%.0f")°")
                     }
                     .frame(height: proxy.size.width * 0.5)
                     .padding(10)

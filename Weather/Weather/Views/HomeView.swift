@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct HomeView: View {
+    @EnvironmentObject var weatherViewModel: WeatherViewModel
     @State private var showDashboard = false
     @State private var isCelcius = true
-    @State private var title: Text = Text(Date.now, format: .dateTime.weekday().day().month())
     var body: some View {
         NavigationView {
-            ContainerView(showDashboard: $showDashboard)
+            ContainerView(showDashboard: $showDashboard, weatherViewModel: weatherViewModel)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -30,14 +30,15 @@ struct HomeView: View {
 
 struct ContainerView: View {
     @Binding var showDashboard: Bool
+    @ObservedObject var weatherViewModel: WeatherViewModel
     var body: some View {
         ZStack {
             if showDashboard {
-                DashboardView()
+                DashboardView(weatherViewModel: weatherViewModel)
                     .transition(.asymmetric(insertion: .move(edge: .leading),
                                             removal: .move(edge: .trailing)))
             } else {
-                CityListView()
+                CityListView(weatherViewModel: weatherViewModel)
                     .transition(.asymmetric(insertion: .move(edge: .trailing),
                                             removal: .move(edge: .leading)))
             }

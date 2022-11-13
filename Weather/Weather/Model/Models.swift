@@ -14,6 +14,7 @@ struct WeatherResponse: Decodable {
     var main: MainResponse
     var name: String
     var wind: WindResponse
+    var sys: Sys
 
     struct CoordinatesResponse: Decodable {
         var lon: Double
@@ -40,6 +41,13 @@ struct WeatherResponse: Decodable {
         var speed: Double
         var deg: Double
     }
+
+    struct Sys: Codable {
+        let type, id: Int
+        let country: String
+        let sunrise, sunset: Int
+    }
+
 }
 
 extension WeatherResponse.MainResponse {
