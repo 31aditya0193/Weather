@@ -25,4 +25,24 @@ class WeatherUITests: XCTestCase {
         hamburgerButton.tap()
         XCTAssertTrue(hamburgerButton.isHittable)
     }
+
+    func testCityListView() {
+        let app = XCUIApplication()
+        app.launch()
+
+        let searchBar = app.searchFields.firstMatch
+        XCTAssertTrue(searchBar.waitForExistence(timeout: 1))
+        searchBar.tap()
+        searchBar.typeText("Agra")
+        app.keyboards.buttons ["search"].tap()
+        sleep(10)
+        XCTAssert(app.staticTexts["Agra"].exists)
+        XCTAssert(app.staticTexts["India"].exists)
+        
+        let weatherTile = app.staticTexts["India"]
+        weatherTile.tap()
+        
+        XCTAssertTrue(app.staticTexts["Agra"].exists)
+        XCTAssertFalse(app.staticTexts["India"].exists)
+    }
 }

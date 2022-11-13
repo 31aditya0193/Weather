@@ -25,7 +25,7 @@ class WeatherServiceTests: XCTestCase {
         XCTAssertEqual(components?.url?.scheme, "https")
         XCTAssertEqual(components?.url?.host, "api.openweathermap.org")
         XCTAssertEqual(components?.url?.path, "/data/2.5/weather")
-        XCTAssertEqual(components?.url, URL(string: "https://api.openweathermap.org/data/2.5/weather?q=lucknow&appid=1e64ec65233345900b593cf16d21f1e5&units=metric"))
+        XCTAssertEqual(components?.url, URL(string: "https://api.openweathermap.org/data/2.5/weather?q=lucknow&appid=1e64ec65233345900b593cf16d21f1e5&units=imperial"))
     }
 
     func testUrlPreparationNegative() {
