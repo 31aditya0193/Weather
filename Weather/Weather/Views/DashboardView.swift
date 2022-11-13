@@ -9,17 +9,15 @@ import SwiftUI
 
 struct DashboardView: View {
     @ObservedObject var weatherViewModel: WeatherViewModel
+    @Binding var index: Int
 
     var body: some View {
         ZStack {
-            LinearGradient(colors: [.white, .orange],
+            LinearGradient(colors: [.gray, .orange],
                            startPoint: .top, endPoint: .bottom)
                 .ignoresSafeArea()
             VStack {
-                InfoView(weatherViewModel: weatherViewModel)
-            }
-            .onAppear {
-                weatherViewModel.getWeather(for: "London")
+                InfoView(weatherViewModel: weatherViewModel, index: $index)
             }
             .navigationTitle(Text(Date.now, format: .dateTime.weekday().day().month()))
         }
@@ -28,6 +26,7 @@ struct DashboardView: View {
 
 struct InfoView: View {
     @ObservedObject var weatherViewModel: WeatherViewModel
+    @Binding var index: Int
     var body: some View {
         GeometryReader { proxy in
             VStack {
@@ -37,7 +36,7 @@ struct InfoView: View {
                 HStack {
                     Spacer()
                     VStack(alignment: .leading) {
-                        Text(weatherViewModel.weather.first?.name ?? "...")
+                        Text(weatherViewModel.weather[index].name ?? "...")
                             .font(.system(size: 24))
                             .gesture(
                                 DragGesture(minimumDistance: 0, coordinateSpace: .local)

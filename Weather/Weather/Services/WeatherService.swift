@@ -39,7 +39,7 @@ class WeatherService {
         components.queryItems = [
             URLQueryItem(name: "q", value: cityName),
             URLQueryItem(name: "appid", value: "1e64ec65233345900b593cf16d21f1e5"),
-            URLQueryItem(name: "units", value: "metric")
+            URLQueryItem(name: "units", value: "imperial")
         ]
         return components
     }

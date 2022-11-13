@@ -10,11 +10,13 @@ import Foundation
 class WeatherViewModel: ObservableObject {
     let weatherService: WeatherService = WeatherService()
     @Published var weather: [WeatherResponse] = []
+    var cities: [String] = []
 
     func getWeather(for city: String) {
         weatherService.getCurrentWeather(for: city) { weatherResponse in
             DispatchQueue.main.async {
                 self.weather.append(weatherResponse)
+                self.cities.append(city)
             }
         }
     }

@@ -9,6 +9,8 @@ import SwiftUI
 
 struct CityListView: View {
     @ObservedObject var weatherViewModel: WeatherViewModel
+    @Binding var showDashboard: Bool
+    @Binding var index: Int
     @State private var searchText: String = ""
 
     let columns = [
@@ -16,29 +18,47 @@ struct CityListView: View {
             GridItem()
         ]
     var body: some View {
-        GeometryReader { proxy in
-            ScrollView {
-                LazyVGrid(columns: columns, spacing: 10) {
-                    ForEach(0..<weatherViewModel.weather.count, id: \.self) { idx in
-                        WeatherTile(weatherViewModel: weatherViewModel, idx: idx)
-                            .frame(width: proxy.size.width * 0.4, height: proxy.size.width * 0.4)
-                            .cornerRadius(25)
+        ZStack {
+            LinearGradient(colors: [.yellow.opacity(0.3), .green],
+                           startPoint: .top, endPoint: .bottom)
+            .ignoresSafeArea()
+            GeometryReader { proxy in
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: 10) {
+                        ForEach(0..<weatherViewModel.weather.count, id: \.self) { idx in
+                            WeatherTile(weatherViewModel: weatherViewModel, showDashboard: $showDashboard, index: $index, idx: idx)
+                                .frame(width: proxy.size.width * 0.4, height: proxy.size.width * 0.4)
+                                .cornerRadius(25)
+                        }
                     }
                 }
             }
         }
         .navigationTitle("Add City")
         .searchable(text: $searchText, prompt: "Search Weather for City...")
+        .onSubmit(of: .search, runSearch)
+    }
+
+    func runSearch() {
+        weatherViewModel.getWeather(for: searchText)
     }
 }
 
 struct WeatherTile: View {
     @ObservedObject var weatherViewModel: WeatherViewModel
+    @Binding var showDashboard: Bool
+    @Binding var index: Int
     var idx: Int
     var body: some View {
         ZStack {
             Color.purple.opacity(0.4)
             TileInfo(weatherRespose: weatherViewModel.weather[idx])
+        }
+        .onTapGesture {
+            withAnimation {
+                index = idx
+                showDashboard.toggle()
+            }
         }
     }
 }

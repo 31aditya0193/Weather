@@ -25,16 +25,4 @@ class WeatherUITests: XCTestCase {
         hamburgerButton.tap()
         XCTAssertTrue(hamburgerButton.isHittable)
     }
-
-    func testScaleSwitchButton() throws {
-        let app = XCUIApplication()
-        app.launch()
-
-        let scaleSwitchButton = app.buttons.element(boundBy: 1)
-        XCTAssertTrue(scaleSwitchButton.isHittable)
-        XCTAssertEqual(scaleSwitchButton.label, "°C")
-        scaleSwitchButton.tap()
-        XCTAssertTrue(scaleSwitchButton.isHittable)
-        XCTAssertEqual(scaleSwitchButton.label, "°F")
-    }
 }

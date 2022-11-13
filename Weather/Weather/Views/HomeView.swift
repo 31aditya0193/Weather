@@ -17,11 +17,7 @@ struct HomeView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
-                        HamburgerButton(tapped: $showDashboard)
-                    }
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        ScaleSwitchButton(isCelcius: $isCelcius,
-                                          isDashboard: $showDashboard)
+                        LocationButton(tapped: $showDashboard)
                     }
                 }
         }
@@ -30,23 +26,24 @@ struct HomeView: View {
 
 struct ContainerView: View {
     @Binding var showDashboard: Bool
+    @State var index: Int = 0
     @ObservedObject var weatherViewModel: WeatherViewModel
     var body: some View {
         ZStack {
             if showDashboard {
-                DashboardView(weatherViewModel: weatherViewModel)
-                    .transition(.asymmetric(insertion: .move(edge: .leading),
-                                            removal: .move(edge: .trailing)))
-            } else {
-                CityListView(weatherViewModel: weatherViewModel)
+                DashboardView(weatherViewModel: weatherViewModel, index: $index)
                     .transition(.asymmetric(insertion: .move(edge: .trailing),
                                             removal: .move(edge: .leading)))
+            } else {
+                CityListView(weatherViewModel: weatherViewModel, showDashboard: $showDashboard, index: $index)
+                    .transition(.asymmetric(insertion: .move(edge: .leading),
+                                            removal: .move(edge: .trailing)))
             }
         }
     }
 }
 
-struct HamburgerButton: View {
+struct LocationButton: View {
     @Binding var tapped: Bool
     var body: some View {
         Button(action: {
@@ -54,35 +51,8 @@ struct HamburgerButton: View {
                 tapped.toggle()
             }
         }) {
-            Image(systemName: "line.horizontal.3")
-                .rotationEffect(.degrees(tapped ? 0 : 90))
-        }
-    }
-}
-
-struct ScaleSwitchButton: View {
-    @Binding var isCelcius: Bool
-    @Binding var isDashboard: Bool
-    var body: some View {
-        ZStack {
-            if isDashboard {
-                Button(action: {
-                    withAnimation {
-                        isCelcius.toggle()
-                    }
-                }) {
-                    Text(isCelcius ? "°C" : "°F")
-                        .fontWeight(.bold)
-                }
-            } else {
-                Button(action: {
-                        print("Will Trigger City Adding")
-                }) {
-                    Text("+")
-                        .font(.title)
-                        .fontWeight(.bold)
-                }
-            }
+            Image(systemName: "location.fill")
+                .rotationEffect(.degrees(tapped ? -135 : 0))
         }
     }
 }
