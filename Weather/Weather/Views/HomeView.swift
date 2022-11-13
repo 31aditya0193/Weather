@@ -11,21 +11,22 @@ struct HomeView: View {
     @State private var searchText: String = ""
     @State private var showDashboard = true
     @State private var isCelcius = true
-    
+    @State private var title: Text = Text(Date.now, format: .dateTime.weekday().day().month())
     var body: some View {
         NavigationView {
             ContainerView(showDashboard: $showDashboard)
-                .navigationTitle(Text(Date.now, format: .dateTime.weekday().day().month()))
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         HamburgerButton(tapped: $showDashboard)
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        ScaleSwitchButton(isCelcius: $isCelcius)
+                        ScaleSwitchButton(isCelcius: $isCelcius,
+                                          isDashboard: $showDashboard)
                     }
                 }
         }
+//        .accentColor(.white)
         .searchable(text: $searchText, prompt: "Check Weather for City")
     }
 }
@@ -63,14 +64,27 @@ struct HamburgerButton: View {
 
 struct ScaleSwitchButton: View {
     @Binding var isCelcius: Bool
+    @Binding var isDashboard: Bool
     var body: some View {
-        Button(action: {
-            withAnimation {
-                isCelcius.toggle()
+        ZStack {
+            if isDashboard {
+                Button(action: {
+                    withAnimation {
+                        isCelcius.toggle()
+                    }
+                }) {
+                    Text(isCelcius ? "°C" : "°F")
+                        .fontWeight(.bold)
+                }
+            } else {
+                Button(action: {
+                        print("Will Trigger City Adding")
+                }) {
+                    Text("+")
+                        .font(.title)
+                        .fontWeight(.bold)
+                }
             }
-        }) {
-            Text(isCelcius ? "°C" : "°F")
-                .fontWeight(.bold)
         }
     }
 }
