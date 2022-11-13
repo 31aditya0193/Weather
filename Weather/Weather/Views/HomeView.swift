@@ -9,30 +9,41 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var searchText: String = ""
-    @State private var tappedHamburger = false
+    @State private var showDashboard = true
     @State private var isCelcius = true
     
     var body: some View {
         NavigationView {
-            DashboardView()
+            ContainerView(showDashboard: $showDashboard)
                 .navigationTitle(Text(Date.now, format: .dateTime.weekday().day().month()))
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
-                        HamburgerButton(tapped: $tappedHamburger)
+                        HamburgerButton(tapped: $showDashboard)
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         ScaleSwitchButton(isCelcius: $isCelcius)
                     }
                 }
         }
-        .searchable(text: $searchText)
+        .searchable(text: $searchText, prompt: "Check Weather for City")
     }
 }
 
-struct DashboardView: View {
+struct ContainerView: View {
+    @Binding var showDashboard: Bool
     var body: some View {
-        Text("Hello")
+        ZStack {
+            if showDashboard {
+                DashboardView()
+                    .transition(.asymmetric(insertion: .move(edge: .leading),
+                                            removal: .move(edge: .trailing)))
+            } else {
+                CityListView()
+                    .transition(.asymmetric(insertion: .move(edge: .trailing),
+                                            removal: .move(edge: .leading)))
+            }
+        }
     }
 }
 
@@ -45,7 +56,7 @@ struct HamburgerButton: View {
             }
         }) {
             Image(systemName: "line.horizontal.3")
-                .rotationEffect(.degrees(tapped ? 90 : 0))
+                .rotationEffect(.degrees(tapped ? 0 : 90))
         }
     }
 }
